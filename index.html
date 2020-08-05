@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>MakeMyTrip Home</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css" integrity="sha384-VCmXjywReHh4PwowAiWNagnWcLhlEJLA5buUprzK8rxFgeH0kww/aWY76TfkUoSX" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js"
+  integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+  crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/js/bootstrap.min.js" integrity="sha384-XEerZL0cuoUbHE4nZReLT7nx9gQrQreJekYhJD9WNWhH8nEW+0c5qq7aIo2Wl30J" crossorigin="anonymous"></script>
+</head>
+<style type="text/css">
+	body{
+		background-color: #ddd;
+	}
+
+	nav a:hover{
+		color: white;
+	}
+	.bg-purple{
+		background-color: #8e44ad;
+	}
+	nav ul{
+		display: inline;
+		text-decoration: none;
+	}
+
+	nav ul li{
+		display: inline;
+		margin-left: 30px;
+		font-size: 20px;
+	}
+</style>
+<script type="text/javascript">
+	$(document).ready(function(){
+		
+		$('#search').click(function(){
+			
+			var boarding = $('#boarding').val();
+			var destination = $('#destination').val();
+
+			// hit the api
+			$.ajax({
+				'url':'https://indianrailapi.com/api/v2/TrainBetweenStation/apikey/30c382602bfa67c8a7c580e6cfe2becb/From/' + boarding +'/To/' + destination,
+				'success':function(data){
+					$('#list_trains').html('');
+					console.log(data);
+					//display data properly
+
+					$.each(data.Trains, function( key, value ) {
+  						console.log( key + ": " + value.TrainName );
+
+  						$('#list_trains').append('<li>' + value.TrainName +'</li>')
+					});
+
+					$('#exampleModal').modal('show');
+
+				},
+				'error':function(){
+					alert("Kuch gadbad hua");
+				}
+			});
+
+		});
+
+	});
+</script>
+<body>
+
+	<nav class="navbar bg-purple text-white">
+		<a href="#" class="navbar-brand text-white">MakeMyTrip</a>
+		<div class="menu">
+			<ul>
+				<li>Train Schedule</li>
+				<li>Train between Stations</li>
+				<li>PNR Status</li>
+				<li>Train Status</li>
+			</ul>
+		</div>
+	</nav>
+
+	<div class="container mt-3">
+		<div class="row">
+			<div class="col-md-8 offset-2">
+				<div class="card">
+					<div class="card-body">
+						<h2>Train between stations</h2>
+						<div class="row mt-3">
+							<div class="col-md-4">
+								<input id="boarding" class="form-control" type="text" name="" placeholder="Boarding Station">
+							</div>
+							<div class="col-md-4">
+								<input id="destination" class="form-control" type="text" name="" placeholder="Destination Station">
+							</div>
+							<div class="col-md-4">
+								<button class="btn bg-purple btn-block text-light" id="search">Show Trains</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Trains between stations</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <h5>Here is the list of trains</h5>
+        <ul id="list_trains"></ul>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
